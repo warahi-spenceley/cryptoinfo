@@ -95,13 +95,13 @@ export default function Coins() {
         const sortedRows = rows.sort((a: object, b: object) => sortAlphabetically(a, b, 'name'));
   
         setTableData(sortedRows);
+        if (tableData) setLoading(false);
       } catch (error) {
         console.error("Failed to fetch and set table data for all coins. Reason: ", error);
       }
     };
   
     onLoad();
-    if (tableData) setLoading(false);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (loading) return (

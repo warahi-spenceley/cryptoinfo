@@ -50,7 +50,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 
 export default function Coin() {
   const params: { coinId: string } = useParams();
-  const [coinData, setCoinData] = React.useState<any>(null);
+  const [coinData, setCoinData] = React.useState<any>([]);
   const [loading, setLoading] = React.useState(true);
   const [expanded, setExpanded] = React.useState(false);
   const history = useHistory();
@@ -71,14 +71,14 @@ export default function Coin() {
           maxSupply: unfilteredCoinData.market_data.max_supply,
         };
         setCoinData(filteredCoinData);
+        if (coinData) setLoading(false);
       } catch (error) {
         console.error(`Failed to fetch and set data for coin ID: ${params.coinId}. Reason: `, error);
       }
     };
   
     onLoad();
-    if (coinData) setLoading(false);
-  }, [coinData, params.coinId]);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
