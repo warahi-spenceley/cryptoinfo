@@ -1,12 +1,11 @@
 import React from 'react';
 import { useHistory } from "react-router";
-
 import StandardTable from '../components/StandardTable';
 import Loading from '../components/Loading';
-
 import { sortAlphabetically } from '../utils/TableUtils';
-
 import * as CoingeckoApi from '../api/CoingeckoApi';
+import { Grid, Button } from '@mui/material';
+import { WatchlistContext } from '../context/WatchlistProvider';
 
 interface Column {
   id: 'name' | 'image' | 'price' | 'twentyFourHourHigh' | 'twentyFourHourLow' | 'marketCap';
@@ -78,6 +77,9 @@ function createData(
 }
 
 export default function Coins() {
+  const [allData, setAllData] = React.useState([]);
+  const { watchList } = React.useContext(WatchlistContext);
+  const [dataDisplaying, setDataDisplaying] = React.useState('all');
   const [tableData, setTableData] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
   const history = useHistory();
@@ -94,6 +96,7 @@ export default function Coins() {
         ));
         const sortedRows = rows.sort((a: object, b: object) => sortAlphabetically(a, b, 'name'));
   
+        setAllData(sortedRows);
         setTableData(sortedRows);
         if (tableData) setLoading(false);
       } catch (error) {
@@ -104,6 +107,16 @@ export default function Coins() {
     onLoad();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const handleDataSwitch = () => {
+    if (dataDisplaying === 'all') {
+      setTableData(watchList);
+      setDataDisplaying('watchlist');
+    } else if (dataDisplaying === 'watchlist') {
+      setTableData(allData);
+      setDataDisplaying('all');
+    };
+  };
+
   if (loading) return (
     <div style={{display: 'flex', justifyContent: 'center'}}>
       <Loading message="Won't be long, we're just loading the market data for you." />
@@ -111,15 +124,41 @@ export default function Coins() {
   );
 
   return (
-    <StandardTable
-      tableData={tableData}
-      rowHeaders={[
-        { title: "coin", columnSpan: 2 },
-        { title: "details", columnSpan: 4 }
-      ]}
-      columns={columns}
-      rowsPerPageOptions={[10, 25, 50, 100]}
-      onRowClick={(rowData: any) => history.push(`/${rowData.id}`)}
-    />
+    <Grid
+      container
+      display='flex'
+      spacing={1}
+      direction='column'
+      alignItems="center"
+      justifyContent="center"
+    >
+      <Grid item xs={12}>
+        <Button 
+          sx={{ minWidth: 345 }}
+          variant="text"
+          onClick={handleDataSwitch}
+        >
+          {
+            dataDisplaying === 'all' ?
+              'Show Watchlist'
+            :
+              'Show All'
+          }
+        </Button>
+      </Grid>
+
+      <Grid item xs={12}>
+        <StandardTable
+          tableData={tableData}
+          rowHeaders={[
+            { title: "coin", columnSpan: 2 },
+            { title: "details", columnSpan: 4 }
+          ]}
+          columns={columns}
+          rowsPerPageOptions={[10, 25, 50, 100]}
+          onRowClick={(rowData: any) => history.push(`/${rowData.id}`)}
+        />
+      </Grid>
+  </Grid>
   )
 }

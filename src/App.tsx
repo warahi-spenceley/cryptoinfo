@@ -1,17 +1,17 @@
 import AppRouter from "./AppRouter";
 import StandardPage from './components/StandardPage';
-import FavouritesProvider from "./context/FavouritesProvider";
+import WatchlistProvider from "./context/WatchlistProvider";
 
 const App = () => {
   return (
-    <FavouritesProvider>
+    <WatchlistProvider>
       <StandardPage 
         title="Crypto Info"
         subtitle="Current information on the global cryptocurrency market"
       >
         <AppRouter />
       </StandardPage>
-    </FavouritesProvider>
+    </WatchlistProvider>
   );
 };
 

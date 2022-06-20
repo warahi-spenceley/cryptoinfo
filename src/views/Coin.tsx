@@ -18,7 +18,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useParams, useHistory } from 'react-router';
 import Loading from '../components/Loading';
 import * as CoingeckoApi from '../api/CoingeckoApi';
-import { FavouritesContext } from '../context/FavouritesProvider';
+import { WatchlistContext } from '../context/WatchlistProvider';
 import { useSnackbar } from 'notistack';
 
 interface FilteredData {
@@ -48,9 +48,9 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   }),
 }));
 
-const checkIfFavourite = (favourites: FilteredData[], coinId: string) => {
-  const isFavourite = favourites.find((favourite: FilteredData) => favourite.id === coinId) ? true : false;
-  return isFavourite;
+const checkIfOnWatchlist = (watchList: FilteredData[], coinId: string) => {
+  const isOnWatchlist = watchList.find((coin: FilteredData) => coin.id === coinId) ? true : false;
+  return isOnWatchlist;
 };
 
 export default function Coin() {
@@ -59,14 +59,14 @@ export default function Coin() {
   const [loading, setLoading] = React.useState(true);
   const [expanded, setExpanded] = React.useState(false);
   const history = useHistory();
-  const { favourites, setFavourites } = React.useContext(FavouritesContext);
-  const [isFavourite, setIsFavourite] = React.useState<boolean>(checkIfFavourite(favourites, params.coinId));
+  const { watchList, setWatchlist } = React.useContext(WatchlistContext);
+  const [isOnWatchlist, setIsOnWatchlist] = React.useState<boolean>(checkIfOnWatchlist(watchList, params.coinId));
   const { enqueueSnackbar } = useSnackbar();
 
   React.useEffect(() => {
-    const isFavourite = checkIfFavourite(favourites, params.coinId);
-    setIsFavourite(isFavourite)
-  }, [favourites]); // eslint-disable-line react-hooks/exhaustive-deps
+    const isOnWatchlist = checkIfOnWatchlist(watchList, params.coinId);
+    setIsOnWatchlist(isOnWatchlist)
+  }, [watchList]); // eslint-disable-line react-hooks/exhaustive-deps
 
   React.useEffect(() => {
     const onLoad = async () => {
@@ -99,16 +99,16 @@ export default function Coin() {
 
   const handleFavouriteClick = () => {
     try {
-      if (isFavourite) {
-        const newFavourites: FilteredData[] = favourites.filter((newFavourite: FilteredData) => newFavourite.id !== coinData.id);
-        setFavourites(newFavourites);
+      if (isOnWatchlist) {
+        const newFavourites: FilteredData[] = watchList.filter((newFavourite: FilteredData) => newFavourite.id !== coinData.id);
+        setWatchlist(newFavourites);
       } else {
-        setFavourites([...favourites, coinData]);
+        setWatchlist([...watchList, coinData]);
       };
     } catch (error) {
-      console.error(`Failed to ${isFavourite ? 'remove from' : 'add to'} favourites. Reason: `, error);
+      console.error(`Failed to ${isOnWatchlist ? 'remove from' : 'add to'} Watchlist. Reason: `, error);
     } finally {
-      enqueueSnackbar(`${coinData.name} ${isFavourite ? 'removed from' : 'added to'} favourites`, { variant: 'info' });
+      enqueueSnackbar(`${coinData.name} ${isOnWatchlist ? 'removed from' : 'added to'} Watchlist`, { variant: 'info' });
     }
   };
 
@@ -172,7 +172,7 @@ export default function Coin() {
 
           <CardActions disableSpacing>
             <IconButton onClick={handleFavouriteClick} aria-label="favourites button">
-              <FavoriteIcon color={isFavourite ? 'error' : 'disabled'}/>
+              <FavoriteIcon color={isOnWatchlist ? 'error' : 'disabled'}/>
             </IconButton>
             <ExpandMore
               expand={expanded}
