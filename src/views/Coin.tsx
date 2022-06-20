@@ -31,6 +31,8 @@ interface FilteredData {
   circulatingSupply: number;
   totalSupply: number;
   maxSupply: number;
+  twentyFourHourHigh?: number,
+  twentyFourHourLow?: number,
 }
 
 interface ExpandMoreProps extends IconButtonProps {
@@ -82,6 +84,8 @@ export default function Coin() {
           circulatingSupply: unfilteredCoinData.market_data.circulating_supply,
           totalSupply: unfilteredCoinData.market_data.total_supply,
           maxSupply: unfilteredCoinData.market_data.max_supply,
+          twentyFourHourHigh: unfilteredCoinData.market_data.high_24h.aud,
+          twentyFourHourLow: unfilteredCoinData.market_data.low_24h.aud
         };
         setCoinData(filteredCoinData);
         if (coinData) setLoading(false);
