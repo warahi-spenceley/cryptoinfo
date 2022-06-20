@@ -132,20 +132,26 @@ export default function Coins() {
       alignItems="center"
       justifyContent="center"
     >
-      <Grid item xs={12}>
-        <Button 
-          sx={{ minWidth: 345 }}
-          variant="text"
-          onClick={handleDataSwitch}
-        >
-          {
-            dataDisplaying === 'all' ?
-              'Show Watchlist'
-            :
-              'Show All'
-          }
-        </Button>
-      </Grid>
+
+      {
+        watchList.length > 0 ?
+          <Grid item xs={12}>
+            <Button 
+              sx={{ minWidth: 345 }}
+              variant="text"
+              onClick={handleDataSwitch}
+            >
+              {
+                dataDisplaying === 'all' ?
+                  'Show Watchlist'
+                :
+                  'Show All'
+              }
+            </Button>
+          </Grid>
+        :
+          null
+      }
 
       <Grid item xs={12}>
         <StandardTable
