@@ -19,6 +19,7 @@ import { useParams, useHistory } from 'react-router';
 import Loading from '../components/Loading';
 import * as CoingeckoApi from '../api/CoingeckoApi';
 import { FavouritesContext } from '../context/FavouritesProvider';
+import { useSnackbar } from 'notistack';
 
 interface FilteredData {
   id: string;
@@ -60,11 +61,12 @@ export default function Coin() {
   const history = useHistory();
   const { favourites, setFavourites } = React.useContext(FavouritesContext);
   const [isFavourite, setIsFavourite] = React.useState<boolean>(checkIfFavourite(favourites, params.coinId));
+  const { enqueueSnackbar } = useSnackbar();
 
   React.useEffect(() => {
     const isFavourite = checkIfFavourite(favourites, params.coinId);
     setIsFavourite(isFavourite)
-  }, [isFavourite, favourites]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [favourites]); // eslint-disable-line react-hooks/exhaustive-deps
 
   React.useEffect(() => {
     const onLoad = async () => {
@@ -96,10 +98,18 @@ export default function Coin() {
   };
 
   const handleFavouriteClick = () => {
-    if (isFavourite) {
-      const newFavourites: FilteredData[] = favourites.filter((newFavourite: FilteredData) => newFavourite.id !== params.coinId);
-      setFavourites(newFavourites);
-    } else setFavourites([...favourites, coinData]);
+    try {
+      if (isFavourite) {
+        const newFavourites: FilteredData[] = favourites.filter((newFavourite: FilteredData) => newFavourite.id !== coinData.id);
+        setFavourites(newFavourites);
+      } else {
+        setFavourites([...favourites, coinData]);
+      };
+    } catch (error) {
+      console.error(`Failed to ${isFavourite ? 'remove from' : 'add to'} favourites. Reason: `, error);
+    } finally {
+      enqueueSnackbar(`${coinData.name} ${isFavourite ? 'removed from' : 'added to'} favourites`, { variant: 'info' });
+    }
   };
 
   if (loading) return (
