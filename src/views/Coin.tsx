@@ -62,7 +62,7 @@ export default function Coin() {
         const filteredCoinData: FilteredData = {
           id: unfilteredCoinData.id,
           name: unfilteredCoinData.name,
-          image: unfilteredCoinData.image.small,
+          image: unfilteredCoinData.image.large,
           price: unfilteredCoinData.market_data.current_price.aud,
           marketCap: unfilteredCoinData.market_data.market_cap.aud,
           description: unfilteredCoinData.description.en,
@@ -143,7 +143,7 @@ export default function Coin() {
             </CardContent>
 
           <CardActions disableSpacing>
-            <IconButton aria-label="add to favorites">
+            <IconButton aria-label="favourites button">
               <FavoriteIcon />
             </IconButton>
             <ExpandMore
