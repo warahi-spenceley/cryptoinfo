@@ -16,10 +16,9 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useParams, useHistory } from 'react-router';
-
 import Loading from '../components/Loading';
-
 import * as CoingeckoApi from '../api/CoingeckoApi';
+import { FavouritesContext } from '../context/FavouritesProvider';
 
 interface FilteredData {
   id: string;
@@ -48,12 +47,24 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   }),
 }));
 
+const checkIfFavourite = (favourites: FilteredData[], coinId: string) => {
+  const isFavourite = favourites.find((favourite: FilteredData) => favourite.id === coinId) ? true : false;
+  return isFavourite;
+};
+
 export default function Coin() {
   const params: { coinId: string } = useParams();
   const [coinData, setCoinData] = React.useState<any>([]);
   const [loading, setLoading] = React.useState(true);
   const [expanded, setExpanded] = React.useState(false);
   const history = useHistory();
+  const { favourites, setFavourites } = React.useContext(FavouritesContext);
+  const [isFavourite, setIsFavourite] = React.useState<boolean>(checkIfFavourite(favourites, params.coinId));
+
+  React.useEffect(() => {
+    const isFavourite = checkIfFavourite(favourites, params.coinId);
+    setIsFavourite(isFavourite)
+  }, [isFavourite, favourites]); // eslint-disable-line react-hooks/exhaustive-deps
 
   React.useEffect(() => {
     const onLoad = async () => {
@@ -82,6 +93,13 @@ export default function Coin() {
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
+  };
+
+  const handleFavouriteClick = () => {
+    if (isFavourite) {
+      const newFavourites: FilteredData[] = favourites.filter((newFavourite: FilteredData) => newFavourite.id !== params.coinId);
+      setFavourites(newFavourites);
+    } else setFavourites([...favourites, coinData]);
   };
 
   if (loading) return (
@@ -143,8 +161,8 @@ export default function Coin() {
             </CardContent>
 
           <CardActions disableSpacing>
-            <IconButton aria-label="favourites button">
-              <FavoriteIcon />
+            <IconButton onClick={handleFavouriteClick} aria-label="favourites button">
+              <FavoriteIcon color={isFavourite ? 'error' : 'disabled'}/>
             </IconButton>
             <ExpandMore
               expand={expanded}
