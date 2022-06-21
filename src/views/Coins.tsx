@@ -81,7 +81,7 @@ export default function Coins() {
   const { watchList } = React.useContext(WatchlistContext);
   const [dataDisplaying, setDataDisplaying] = React.useState('all');
   const [tableData, setTableData] = React.useState([]);
-  const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = React.useState(true);
   const history = useHistory();
 
   React.useEffect(() => {
