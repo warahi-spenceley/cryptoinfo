@@ -101,11 +101,11 @@ export default function Coin() {
     setExpanded(!expanded);
   };
 
-  const handleFavouriteClick = () => {
+  const handleWatchlistClick = () => {
     try {
       if (isOnWatchlist) {
-        const newFavourites: FilteredData[] = watchList.filter((newFavourite: FilteredData) => newFavourite.id !== coinData.id);
-        setWatchlist(newFavourites);
+        const newWatchlist: FilteredData[] = watchList.filter((coin: FilteredData) => coin.id !== coinData.id);
+        setWatchlist(newWatchlist);
       } else {
         setWatchlist([...watchList, coinData]);
       };
@@ -175,7 +175,7 @@ export default function Coin() {
             </CardContent>
 
           <CardActions disableSpacing>
-            <IconButton onClick={handleFavouriteClick} aria-label="favourites button">
+            <IconButton onClick={handleWatchlistClick} aria-label="favourites button">
               <FavoriteIcon color={isOnWatchlist ? 'error' : 'disabled'}/>
             </IconButton>
             <ExpandMore
