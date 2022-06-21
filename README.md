@@ -9,6 +9,10 @@ It was also my first experience working with Typescript.
 
 In the project directory, you can run:
 
+### `npm install`
+
+Once cloned down from GitHub, run this command to install the dependencies before you run app locally.
+
 ### `npm start`
 
 Runs the app in the development mode.\
