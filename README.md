@@ -1,9 +1,8 @@
 # Crypto Info
 
-This project was created as a requirement coding challenge for a potential employer.
-This is a simple project that displays current information on the global cryptocurrency market.
-I quite enjoyed working on this little project.
-It was also my first experience working with Typescript. 
+Crypto info is a simple application to display current information on the crypto currency market.
+Users can also save their favourite currencys to a watchlist.
+This app was mainly created to familiarize myself with TypeScript.
 
 ## Available Scripts
 
